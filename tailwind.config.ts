@@ -65,8 +65,8 @@ export default {
 				}
 			},
 			fontFamily: {
+				manrope: ['Manrope', 'sans-serif'],
 				cormorant: ['"Cormorant Garamond"', 'serif'],
-				montserrat: ['Montserrat', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
