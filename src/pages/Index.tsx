@@ -4,7 +4,7 @@ import Icon from "@/components/ui/icon";
 const PHOTO_GONG_WOMAN =
   "https://cdn.poehali.dev/projects/be7eb5fc-8b1e-434c-8f14-80ee7e19ac4f/bucket/fba146fa-9223-4a86-8654-c2c16c4ca3d0.jpg";
 const PHOTO_GONG =
-  ""; // TODO: замените на URL нового фото гонга
+  "https://cdn.poehali.dev/projects/be7eb5fc-8b1e-434c-8f14-80ee7e19ac4f/bucket/c9eb46a6-9031-453b-9aed-8146c4c0e2f4.jpeg";
 
 /* ─── Schedule Card ────────────────────────────────────────────────────── */
 function SessionCard({
