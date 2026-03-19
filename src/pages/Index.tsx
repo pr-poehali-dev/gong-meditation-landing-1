@@ -4,34 +4,7 @@ import Icon from "@/components/ui/icon";
 const PHOTO_GONG_WOMAN =
   "https://cdn.poehali.dev/projects/be7eb5fc-8b1e-434c-8f14-80ee7e19ac4f/bucket/fba146fa-9223-4a86-8654-c2c16c4ca3d0.jpg";
 const PHOTO_GONG =
-  "https://cdn.poehali.dev/projects/be7eb5fc-8b1e-434c-8f14-80ee7e19ac4f/bucket/0200ec69-bfe6-447e-97e0-a4c0c4bab6fe.jpeg";
-
-/* ─── FAQ Item ─────────────────────────────────────────────────────────── */
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div
-      className="border-b border-[var(--brown-border)] py-5 cursor-pointer"
-      onClick={() => setOpen(!open)}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <span className="text-cream font-body text-sm font-medium leading-relaxed">
-          {q}
-        </span>
-        <Icon
-          name={open ? "Minus" : "Plus"}
-          size={16}
-          className="text-gold flex-shrink-0"
-        />
-      </div>
-      {open && (
-        <p className="mt-4 text-cream-dim text-sm leading-relaxed font-body font-light pr-6">
-          {a}
-        </p>
-      )}
-    </div>
-  );
-}
+  ""; // TODO: замените на URL нового фото гонга
 
 /* ─── Schedule Card ────────────────────────────────────────────────────── */
 function SessionCard({
@@ -70,14 +43,19 @@ function SessionCard({
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <span
-          className="text-sm font-medium"
-          style={{ color: spots <= 5 ? "#e07070" : "var(--cream-muted)" }}
-        >
-          Осталось мест: {spots} из {total}
-        </span>
-        <span className="font-display text-2xl text-gold font-light">2 500 ₽</span>
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <span
+            className="text-sm font-medium"
+            style={{ color: spots <= 5 ? "#e07070" : "var(--cream-muted)" }}
+          >
+            Осталось мест: {spots} из {total}
+          </span>
+          <span className="font-display text-2xl text-gold font-light">2 500 ₽</span>
+        </div>
+        <p className="text-cream-muted text-xs font-light">
+          Бронь места осуществляется только по 100% предоплате
+        </p>
       </div>
 
       {!isFull && (
@@ -93,14 +71,8 @@ function SessionCard({
             {agreed && <Icon name="Check" size={10} className="text-[#120e08]" />}
           </div>
           <span className="text-cream-muted text-xs leading-relaxed font-light">
-            Я даю согласие на обработку персональных данных и согласен с{" "}
-            <a href="#" className="underline hover:text-gold transition-colors">
-              политикой конфиденциальности
-            </a>{" "}
-            и{" "}
-            <a href="#" className="underline hover:text-gold transition-colors">
-              договором оферты
-            </a>
+            Я даю согласие на обработку персональных данных, согласен с политикой
+            конфиденциальности и договором оферты
           </span>
         </label>
       )}
@@ -205,21 +177,20 @@ export default function Index() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          БЛОК 2 — СОСТОЯНИЕ
+          БЛОК 2 — ДЛЯ КОГО
       ══════════════════════════════════════════════════════ */}
       <section className="py-24 px-6 md:px-16 max-w-5xl mx-auto">
         <h2 className="font-display text-4xl md:text-5xl text-cream font-light mb-4 leading-tight">
-          Если вам знакомо это состояние
+          Для кого подходит практика
         </h2>
         <div className="gold-divider mb-12" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
-            "Постоянное внутреннее напряжение",
-            "Невозможно остановить поток мыслей",
+            "Постоянное напряжение",
             "Усталость даже после сна",
-            "Перегрузка от работы и ответственности",
             "Раздражительность и тревожность",
+            "Не получается расслабиться",
           ].map((text, i) => (
             <div
               key={i}
@@ -234,16 +205,6 @@ export default function Index() {
               </span>
             </div>
           ))}
-        </div>
-
-        <div
-          className="rounded-xl p-8 border-l-2 border-[var(--gold)]"
-          style={{ backgroundColor: "rgba(201,168,76,0.05)" }}
-        >
-          <p className="text-cream-dim text-base leading-relaxed font-light max-w-xl">
-            В этом состоянии невозможно восстановиться через обычный отдых —
-            телу нужен более глубокий уровень расслабления
-          </p>
         </div>
       </section>
 
@@ -272,16 +233,16 @@ export default function Index() {
               <div className="gold-divider mb-8" />
               <div className="space-y-5 text-cream-dim text-sm leading-relaxed font-light">
                 <p>
-                  Гонг — это не просто звук, а вибрация, которая воздействует
+                  Гонг — это не просто звук, это вибрация, которая воздействует
                   на нервную систему и тело.
                 </p>
                 <p>
-                  Во время практики снижается уровень стресса, замедляется
-                  поток мыслей, уходят зажимы в теле.
+                  Во время практики снижается уровень стресса, замедляется поток
+                  мыслей, уходят блоки и зажимы в теле.
                 </p>
                 <p>
-                  Это естественный процесс — вам не нужно ничего делать,
-                  только лежать и слушать.
+                  При регулярных практиках улучшается эмоциональный фон,
+                  улучшается качество сна, уходит постоянное напряжение.
                 </p>
               </div>
             </div>
@@ -294,7 +255,7 @@ export default function Index() {
       ══════════════════════════════════════════════════════ */}
       <section className="py-24 px-6 md:px-16 max-w-5xl mx-auto">
         <h2 className="font-display text-4xl md:text-5xl text-cream font-light mb-4 leading-tight">
-          Что вы почувствуете после практики
+          После практики Вы почувствуете
         </h2>
         <div className="gold-divider mb-12" />
 
@@ -321,53 +282,11 @@ export default function Index() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          БЛОК 5 — КАК ПРОХОДИТ
-      ══════════════════════════════════════════════════════ */}
-      <section className="py-24 px-6 md:px-16" style={{ backgroundColor: "#100c07" }}>
-        <div className="max-w-5xl mx-auto">
-          <h2 className="font-display text-4xl md:text-5xl text-cream font-light mb-4 leading-tight">
-            Как проходит практика
-          </h2>
-          <div className="gold-divider mb-12" />
-
-          <div className="space-y-5 mb-10">
-            {[
-              "Вы располагаетесь лёжа",
-              "Закрываете глаза",
-              "В течение 60 минут звучит гонг",
-            ].map((step, i) => (
-              <div key={i} className="flex items-center gap-6">
-                <span
-                  className="font-display text-4xl font-light flex-shrink-0 w-12 text-right"
-                  style={{ color: "rgba(201,168,76,0.25)" }}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="text-cream-dim text-base font-light">{step}</span>
-              </div>
-            ))}
-          </div>
-
-          <div
-            className="rounded-xl p-8 border-l-2 border-[var(--gold)]"
-            style={{ backgroundColor: "rgba(201,168,76,0.05)" }}
-          >
-            <p className="text-cream-dim text-base leading-relaxed font-light mb-3">
-              Без разговоров и действий — только звук и работа с состоянием.
-            </p>
-            <p className="text-cream-dim text-base leading-relaxed font-light">
-              Подходит даже тем, кто никогда не медитировал.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
           БЛОК 6 — ВЕДУЩАЯ
       ══════════════════════════════════════════════════════ */}
       <section className="py-24 px-6 md:px-16 max-w-5xl mx-auto">
         <h2 className="font-display text-4xl md:text-5xl text-cream font-light mb-4 leading-tight">
-          Кто проводит практику
+          Ведущая практики Анастасия Горшенёва
         </h2>
         <div className="gold-divider mb-12" />
 
@@ -383,21 +302,21 @@ export default function Index() {
             }}
           />
           <div className="space-y-5">
-            <h3 className="font-display text-3xl text-cream font-light">
-              Анастасия Горшенёва
-            </h3>
-            <div className="space-y-4 text-cream-dim text-sm leading-relaxed font-light">
-              <p>
-                Я работаю со звуком как инструментом восстановления и работы
-                с состоянием.
+            <div
+              className="text-cream-dim text-sm leading-relaxed font-light"
+              style={{ borderLeft: "2px solid var(--gold)", paddingLeft: "1.25rem" }}
+            >
+              <p className="mb-4">
+                «Я работаю со звуком как с инструментом глубокого расслабления и
+                восстановления. Я играю на планетарном гонге Paiste Sun, который
+                настроен в соответствии с естественными гармоническими рядами,
+                основанными на орбитальном движении солнца. Каждая практика —
+                уникальная и никогда не похожа на предыдущую.
               </p>
               <p>
-                У меня музыкальный бэкграунд — я ощущаю звук как среду, в
-                которой происходит изменение состояния.
-              </p>
-              <p>
-                Во время практики я внимательно держу пространство группы,
-                чтобы вы могли действительно расслабиться.
+                Я верю: чтобы заботиться о других, нужно сначала позаботиться о
+                себе. Поэтому создаю пространство, в котором вам будет безопасно
+                и легко расслабиться»
               </p>
             </div>
           </div>
@@ -470,7 +389,7 @@ export default function Index() {
             weekday="Суббота"
             date="28 марта"
             time="20:00 — 21:30"
-            address='Москва, студия растяжки "НУГА", ул. Амурская 1Ак5 (ЖК Level Амурская)'
+            address='Москва, студия растяжки "НУГА", ул. Амурская 1Ак5'
             spots={7}
             total={15}
           />
@@ -478,74 +397,9 @@ export default function Index() {
             weekday="Воскресенье"
             date="29 марта"
             time="13:00 — 14:30"
-            address='Москва, студия растяжки "НУГА", ул. Амурская 1Ак5 (ЖК Level Амурская)'
+            address='Москва, студия растяжки "НУГА", ул. Амурская 1Ак5'
             spots={7}
             total={15}
-          />
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          БЛОК 9 — ЧТО ВЗЯТЬ
-      ══════════════════════════════════════════════════════ */}
-      <section className="py-24 px-6 md:px-16" style={{ backgroundColor: "#100c07" }}>
-        <div className="max-w-5xl mx-auto">
-          <h2 className="font-display text-4xl md:text-5xl text-cream font-light mb-4 leading-tight">
-            Что взять с собой
-          </h2>
-          <div className="gold-divider mb-12" />
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { icon: "Shirt", label: "Удобную одежду" },
-              { icon: "Footprints", label: "Носки" },
-              { icon: "Eye", label: "Маску для сна (по желанию)" },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="card-dark rounded-xl p-6 flex items-center gap-4"
-              >
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: "rgba(201,168,76,0.1)" }}
-                >
-                  <Icon name={item.icon} size={18} className="text-gold" fallback="Package" />
-                </div>
-                <span className="text-cream-dim text-sm font-light">{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          БЛОК 10 — FAQ
-      ══════════════════════════════════════════════════════ */}
-      <section className="py-24 px-6 md:px-16 max-w-3xl mx-auto">
-        <h2 className="font-display text-4xl md:text-5xl text-cream font-light mb-4 leading-tight">
-          Вопросы
-        </h2>
-        <div className="gold-divider mb-10" />
-        <div>
-          <FaqItem
-            q="Нужен ли опыт медитации?"
-            a="Нет. Достаточно просто прийти и лечь."
-          />
-          <FaqItem
-            q="Можно ли опоздать?"
-            a="После начала практики вход невозможен. Приходите заранее."
-          />
-          <FaqItem
-            q="Можно ли отменить запись?"
-            a="Да. При отмене за 24 часа — полный возврат. Позже — перенос."
-          />
-          <FaqItem
-            q="Есть ли противопоказания?"
-            a="Если вы принимаете антидепрессанты или есть панические атаки — практика не рекомендована."
-          />
-          <FaqItem
-            q="Беременность?"
-            a="Можно, но важно предупредить заранее."
           />
         </div>
       </section>
@@ -587,40 +441,6 @@ export default function Index() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          БЛОК 12 — ФОРМА
-      ══════════════════════════════════════════════════════ */}
-      <section
-        id="form"
-        className="py-24 px-6 md:px-16"
-        style={{ backgroundColor: "#100c07" }}
-      >
-        <div className="max-w-md mx-auto">
-          <h2 className="font-display text-4xl md:text-5xl text-cream font-light mb-4 leading-tight">
-            Запись на практику
-          </h2>
-          <div className="gold-divider mb-10" />
-
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Имя"
-              className="w-full bg-brown-mid border border-[var(--brown-border)] rounded px-4 py-3.5 text-cream placeholder-[var(--cream-muted)] font-body text-sm outline-none focus:border-[var(--gold-dim)] transition-colors"
-            />
-            <input
-              type="tel"
-              placeholder="Телефон"
-              className="w-full bg-brown-mid border border-[var(--brown-border)] rounded px-4 py-3.5 text-cream placeholder-[var(--cream-muted)] font-body text-sm outline-none focus:border-[var(--gold-dim)] transition-colors"
-            />
-            <button className="btn-gold w-full py-4">Записаться</button>
-          </div>
-
-          <p className="text-center text-xs text-cream-muted mt-5 font-light leading-relaxed">
-            После отправки вы перейдёте в Telegram-бот для подтверждения записи
-          </p>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
           БЛОК 13 — ФУТЕР
       ══════════════════════════════════════════════════════ */}
       <footer
@@ -630,15 +450,15 @@ export default function Index() {
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-start justify-between gap-8">
             <div>
-              <p className="text-cream text-sm font-semibold mb-3">
-                Sound & Care by Noproblem
-              </p>
               <div className="flex flex-col gap-1.5">
+                <a href="#" className="text-cream-muted text-xs hover:text-gold transition-colors underline">
+                  Согласие на обработку персональных данных
+                </a>
                 <a href="#" className="text-cream-muted text-xs hover:text-gold transition-colors underline">
                   Политика конфиденциальности
                 </a>
                 <a href="#" className="text-cream-muted text-xs hover:text-gold transition-colors underline">
-                  Оферта
+                  Договор оферты
                 </a>
               </div>
             </div>
