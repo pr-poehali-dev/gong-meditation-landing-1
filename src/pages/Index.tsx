@@ -6,21 +6,194 @@ const PHOTO_GONG_WOMAN =
 const PHOTO_GONG =
   "https://cdn.poehali.dev/projects/be7eb5fc-8b1e-434c-8f14-80ee7e19ac4f/bucket/c9eb46a6-9031-453b-9aed-8146c4c0e2f4.jpeg";
 
+const CONSENT_TEXT =
+  "Я даю согласие на обработку персональных данных, согласен с политикой конфиденциальности и договором оферты";
+
+const TG_BOT_URL =
+  "https://api.telegram.org/bot8605419338:AAEGr95oWWYRJ7vPXYs41qbFKEuITeaVPCQ/sendMessage";
+const TG_CHAT_ID = "339670772";
+
+/* ─── Consent checkbox ────────────────────────────────────────────────── */
+function ConsentCheckbox({
+  agreed,
+  onChange,
+}: {
+  agreed: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <label className="flex items-start gap-3 cursor-pointer">
+      <div
+        className="w-4 h-4 mt-0.5 flex-shrink-0 rounded-sm border flex items-center justify-center transition-colors"
+        style={{
+          borderColor: agreed ? "var(--gold)" : "var(--brown-border)",
+          backgroundColor: agreed ? "var(--gold)" : "transparent",
+        }}
+        onClick={() => onChange(!agreed)}
+      >
+        {agreed && <Icon name="Check" size={10} className="text-[#120e08]" />}
+      </div>
+      <span className="text-cream-muted text-xs leading-relaxed font-light">
+        {CONSENT_TEXT}
+      </span>
+    </label>
+  );
+}
+
+/* ─── Application Modal ───────────────────────────────────────────────── */
+function ApplicationModal({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const canSubmit = name.trim() && phone.trim();
+
+  const handleSubmit = async () => {
+    if (!canSubmit || sending) return;
+    setSending(true);
+    try {
+      const text = `Новая заявка с сайта:\n\nИмя: ${name}\nТелефон: ${phone}\nTelegram: ${telegram || "—"}`;
+      await fetch(TG_BOT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: TG_CHAT_ID, text }),
+      });
+    } catch {
+      // silent
+    }
+    setSending(false);
+    setSent(true);
+  };
+
+  const handleClose = () => {
+    onClose();
+    setTimeout(() => {
+      setName("");
+      setPhone("");
+      setTelegram("");
+      setSent(false);
+      setSending(false);
+    }, 300);
+  };
+
+  if (!open) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      onClick={handleClose}
+    >
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <div
+        className="relative w-full max-w-md rounded-xl p-8"
+        style={{
+          backgroundColor: "var(--brown-card)",
+          border: "1px solid var(--brown-border)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-cream-muted hover:text-cream transition-colors"
+        >
+          <Icon name="X" size={20} />
+        </button>
+
+        {sent ? (
+          <div className="text-center py-6">
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5"
+              style={{ backgroundColor: "rgba(201,168,76,0.15)" }}
+            >
+              <Icon name="Check" size={28} className="text-gold" />
+            </div>
+            <p className="text-cream text-sm leading-relaxed font-light">
+              Благодарю за заявку, я свяжусь с Вами в течение 15 мин для
+              уточнения деталей.
+            </p>
+            <button
+              onClick={handleClose}
+              className="btn-outline-gold text-sm px-6 py-3 mt-6"
+            >
+              Закрыть
+            </button>
+          </div>
+        ) : (
+          <>
+            <h3 className="font-display text-3xl text-cream font-light mb-6">
+              Записаться на практику
+            </h3>
+            <div className="space-y-4 mb-6">
+              <input
+                type="text"
+                placeholder="Имя"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full rounded-md px-4 py-3 text-sm text-cream font-light outline-none placeholder:text-cream-muted"
+                style={{
+                  backgroundColor: "var(--brown-mid)",
+                  border: "1px solid var(--brown-border)",
+                }}
+              />
+              <input
+                type="tel"
+                placeholder="Телефон"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full rounded-md px-4 py-3 text-sm text-cream font-light outline-none placeholder:text-cream-muted"
+                style={{
+                  backgroundColor: "var(--brown-mid)",
+                  border: "1px solid var(--brown-border)",
+                }}
+              />
+              <input
+                type="text"
+                placeholder="@username"
+                value={telegram}
+                onChange={(e) => setTelegram(e.target.value)}
+                className="w-full rounded-md px-4 py-3 text-sm text-cream font-light outline-none placeholder:text-cream-muted"
+                style={{
+                  backgroundColor: "var(--brown-mid)",
+                  border: "1px solid var(--brown-border)",
+                }}
+              />
+            </div>
+            <button
+              onClick={handleSubmit}
+              disabled={!canSubmit || sending}
+              className="btn-gold w-full py-3.5 text-sm"
+              style={!canSubmit ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+            >
+              {sending ? "Отправка..." : "Отправить"}
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Schedule Card ────────────────────────────────────────────────────── */
 function SessionCard({
   weekday,
-  date,
-  time,
   address,
   spots,
   total,
+  onBook,
 }: {
   weekday: string;
-  date: string;
-  time: string;
   address: string;
   spots: number;
   total: number;
+  onBook: () => void;
 }) {
   const [agreed, setAgreed] = useState(false);
   const isFull = spots === 0;
@@ -30,12 +203,8 @@ function SessionCard({
       <div>
         <div className="mb-1">
           <span className="font-display text-3xl text-cream font-light">
-            {weekday}, {date}
+            {weekday}
           </span>
-        </div>
-        <div className="flex items-center gap-2 text-cream-dim text-sm mt-2">
-          <Icon name="Clock" size={13} className="text-gold" />
-          {time}
         </div>
         <div className="flex items-start gap-2 text-cream-dim text-sm mt-1.5">
           <Icon name="MapPin" size={13} className="text-gold mt-0.5 flex-shrink-0" />
@@ -59,28 +228,14 @@ function SessionCard({
       </div>
 
       {!isFull && (
-        <label className="flex items-start gap-3 cursor-pointer">
-          <div
-            className="w-4 h-4 mt-0.5 flex-shrink-0 rounded-sm border flex items-center justify-center transition-colors"
-            style={{
-              borderColor: agreed ? "var(--gold)" : "var(--brown-border)",
-              backgroundColor: agreed ? "var(--gold)" : "transparent",
-            }}
-            onClick={() => setAgreed(!agreed)}
-          >
-            {agreed && <Icon name="Check" size={10} className="text-[#120e08]" />}
-          </div>
-          <span className="text-cream-muted text-xs leading-relaxed font-light">
-            Я даю согласие на обработку персональных данных, согласен с политикой
-            конфиденциальности и договором оферты
-          </span>
-        </label>
+        <ConsentCheckbox agreed={agreed} onChange={setAgreed} />
       )}
 
       <button
         className={isFull ? "btn-outline-gold w-full py-3.5 text-sm" : "btn-gold w-full py-3.5 text-sm"}
         disabled={isFull || (!isFull && !agreed)}
         style={!isFull && !agreed ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+        onClick={() => { if (!isFull && agreed) onBook(); }}
       >
         {isFull
           ? "Запись закрыта. Новая запись откроется в понедельник"
@@ -92,12 +247,17 @@ function SessionCard({
 
 /* ─── Main ─────────────────────────────────────────────────────────────── */
 export default function Index() {
-  const scrollToForm = () => {
-    document.getElementById("form")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const [modalOpen, setModalOpen] = useState(false);
+  const [heroAgreed, setHeroAgreed] = useState(false);
+  const [gongAgreed, setGongAgreed] = useState(false);
+  const [hostAgreed, setHostAgreed] = useState(false);
+  const [finalAgreed, setFinalAgreed] = useState(false);
+
+  const openModal = () => setModalOpen(true);
 
   return (
     <div className="min-h-screen bg-brown-dark text-cream font-body">
+      <ApplicationModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       {/* ══════════════════════════════════════════════════════
           БЛОК 1 — HERO
@@ -158,12 +318,18 @@ export default function Index() {
             </p>
 
             <div
-              className="animate-fade-up opacity-0-init delay-300"
+              className="animate-fade-up opacity-0-init delay-300 space-y-4"
               style={{ animationFillMode: "forwards" }}
             >
-              <button onClick={scrollToForm} className="btn-gold text-sm px-8 py-4">
+              <button
+                onClick={() => { if (heroAgreed) openModal(); }}
+                disabled={!heroAgreed}
+                className="btn-gold text-sm px-8 py-4"
+                style={!heroAgreed ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+              >
                 Записаться на ближайшую практику
               </button>
+              <ConsentCheckbox agreed={heroAgreed} onChange={setHeroAgreed} />
             </div>
 
             <p
@@ -245,6 +411,17 @@ export default function Index() {
                   улучшается качество сна, уходит постоянное напряжение.
                 </p>
               </div>
+              <div className="mt-8 space-y-4">
+                <button
+                  onClick={() => { if (gongAgreed) openModal(); }}
+                  disabled={!gongAgreed}
+                  className="btn-gold text-sm px-8 py-4"
+                  style={!gongAgreed ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+                >
+                  Записаться на практику
+                </button>
+                <ConsentCheckbox agreed={gongAgreed} onChange={setGongAgreed} />
+              </div>
             </div>
           </div>
         </div>
@@ -319,6 +496,17 @@ export default function Index() {
                 и легко расслабиться»
               </p>
             </div>
+            <div className="mt-8 space-y-4">
+              <button
+                onClick={() => { if (hostAgreed) openModal(); }}
+                disabled={!hostAgreed}
+                className="btn-gold text-sm px-8 py-4"
+                style={!hostAgreed ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+              >
+                Записаться на практику
+              </button>
+              <ConsentCheckbox agreed={hostAgreed} onChange={setHostAgreed} />
+            </div>
           </div>
         </div>
       </section>
@@ -387,19 +575,17 @@ export default function Index() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <SessionCard
             weekday="Суббота"
-            date="28 марта"
-            time="20:00 — 21:30"
             address='Москва, студия растяжки "НУГА", ул. Амурская 1Ак5'
             spots={7}
             total={15}
+            onBook={openModal}
           />
           <SessionCard
             weekday="Воскресенье"
-            date="29 марта"
-            time="13:00 — 14:30"
             address='Москва, студия растяжки "НУГА", ул. Амурская 1Ак5'
             spots={7}
             total={15}
+            onBook={openModal}
           />
         </div>
       </section>
@@ -434,9 +620,17 @@ export default function Index() {
             Практика длится 60 минут, но даёт состояние, которого сложно
             достичь самостоятельно.
           </p>
-          <button onClick={scrollToForm} className="btn-gold text-sm px-8 py-4">
-            Записаться на практику
-          </button>
+          <div className="inline-flex flex-col items-center gap-4">
+            <button
+              onClick={() => { if (finalAgreed) openModal(); }}
+              disabled={!finalAgreed}
+              className="btn-gold text-sm px-8 py-4"
+              style={!finalAgreed ? { opacity: 0.5, cursor: "not-allowed" } : {}}
+            >
+              Записаться на практику
+            </button>
+            <ConsentCheckbox agreed={finalAgreed} onChange={setFinalAgreed} />
+          </div>
         </div>
       </section>
 
